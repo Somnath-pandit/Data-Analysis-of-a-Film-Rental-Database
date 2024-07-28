@@ -39,44 +39,29 @@ The database schema includes several tables representing different entities in t
 To compile a list of all staff members, including their first and last names, email addresses, and the store identification number where they work, we used the following SQL query:
 
 ```sql
-SELECT staff.first_name, staff.last_name, staff.email, staff.store_id
+SELECT CONCAT(first_name,' ', last_name), store_id, email
 FROM staff;
+
 ```
 
 ### 2. Inventory Management
 
 To provide separate counts of inventory items held at the two stores, we used the following SQL queries:
 
-For Store 1:
 ```sql
-SELECT COUNT(*) AS inventory_count
-FROM inventory
-WHERE store_id = 1;
-```
-
-For Store 2:
-```sql
-SELECT COUNT(*) AS inventory_count
-FROM inventory
-WHERE store_id = 2;
+SELECT store_id,COUNT(*)
+FROM inventory 
+GROUP BY store_id;
 ```
 
 ### 3. Customer Activity Analysis
 
 To count the active customers for each store separately, we defined active customers as those who have made at least one rental. The queries used are:
 
-For Store 1:
 ```sql
-SELECT COUNT(DISTINCT customer_id) AS active_customers
-FROM rental
-WHERE store_id = 1;
-```
-
-For Store 2:
-```sql
-SELECT COUNT(DISTINCT customer_id) AS active_customers
-FROM rental
-WHERE store_id = 2;
+SELECT store_id, COUNT(active) Active_Customers
+FROM customer
+GROUP BY store_id;
 ```
 
 ### 4. Data Breach Liability Assessment
@@ -84,7 +69,7 @@ WHERE store_id = 2;
 To assess the liability of a data breach by counting all customer email addresses stored in the database, we used:
 
 ```sql
-SELECT COUNT(email) AS email_count
+SELECT COUNT(email)
 FROM customer;
 ```
 
@@ -92,24 +77,13 @@ FROM customer;
 
 To analyze film diversity and inventory, we provided the count of unique film titles in inventory at each store and the count of unique categories of films available.
 
-Count of unique film titles for Store 1:
 ```sql
-SELECT COUNT(DISTINCT film_id) AS unique_film_titles
+SELECT store_id, COUNT(DISTINCT film_id) AS unique_films
 FROM inventory
-WHERE store_id = 1;
-```
+GROUP BY store_id; 
 
-Count of unique film titles for Store 2:
-```sql
-SELECT COUNT(DISTINCT film_id) AS unique_film_titles
-FROM inventory
-WHERE store_id = 2;
-```
-
-Count of unique film categories:
-```sql
-SELECT COUNT(DISTINCT category_id) AS unique_categories
-FROM film_category;
+SELECT COUNT(DISTINCT name) AS unique_categories
+FROM category;
 ```
 
 ### 6. Replacement Cost Analysis
